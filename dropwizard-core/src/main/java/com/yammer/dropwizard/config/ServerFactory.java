@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.yammer.dropwizard.jetty.BiDiGzipHandler;
+import com.yammer.dropwizard.jetty.JSONErrorHandler;
 import com.yammer.dropwizard.jetty.UnbrandedErrorHandler;
 import com.yammer.dropwizard.logging.Log;
 import com.yammer.dropwizard.servlets.ThreadNameFilter;
@@ -95,7 +96,7 @@ public class ServerFactory {
             server.addConnector(createInternalConnector());
         }
 
-        server.addBean(new UnbrandedErrorHandler());
+        server.addBean(new JSONErrorHandler());
 
         server.setSendDateHeader(config.isDateHeaderEnabled());
         server.setSendServerVersion(config.isServerHeaderEnabled());

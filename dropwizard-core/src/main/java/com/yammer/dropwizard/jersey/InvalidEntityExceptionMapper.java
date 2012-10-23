@@ -1,5 +1,6 @@
 package com.yammer.dropwizard.jersey;
 
+import com.yammer.dropwizard.jetty.JSONErrorHandler;
 import com.yammer.dropwizard.jetty.UnbrandedErrorHandler;
 import com.yammer.dropwizard.logging.Log;
 import com.yammer.dropwizard.validation.InvalidEntityException;
@@ -21,19 +22,19 @@ public class InvalidEntityExceptionMapper implements ExceptionMapper<InvalidEnti
     @Context
     private HttpServletRequest request;
 
-    private final UnbrandedErrorHandler errorHandler = new UnbrandedErrorHandler();
+    private final JSONErrorHandler jsonErrorHandler = new JSONErrorHandler();
 
     @Override
     public Response toResponse(InvalidEntityException exception) {
         final StringWriter writer = new StringWriter(4096);
         try {
-            errorHandler.writeValidationErrorPage(request, writer, exception);
+            jsonErrorHandler.writeValidationErrorPage(request, writer, exception);
         } catch (IOException e) {
             LOG.warn(e, "Unable to generate error page");
         }
 
         return Response.status(UNPROCESSABLE_ENTITY)
-                       .type(MediaType.TEXT_HTML_TYPE)
+                       .type(MediaType.APPLICATION_JSON)
                        .entity(writer.toString())
                        .build();
     }
