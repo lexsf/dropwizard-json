@@ -3,6 +3,7 @@ package com.yammer.dropwizard.jersey;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Splitter;
+import com.yammer.dropwizard.jetty.JSONErrorHandler;
 import com.yammer.dropwizard.jetty.UnbrandedErrorHandler;
 import com.yammer.dropwizard.logging.Log;
 
@@ -21,10 +22,10 @@ public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProces
     @Context
     private HttpServletRequest request;
 
-    private final UnbrandedErrorHandler errorHandler;
+    private final JSONErrorHandler errorHandler;
 
     public JsonProcessingExceptionMapper() {
-        this.errorHandler = new UnbrandedErrorHandler();
+        this.errorHandler = new JSONErrorHandler();
     }
 
     @Override

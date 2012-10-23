@@ -1,5 +1,6 @@
 package com.yammer.dropwizard.jersey;
 
+import com.yammer.dropwizard.jetty.JSONErrorHandler;
 import com.yammer.dropwizard.jetty.UnbrandedErrorHandler;
 import com.yammer.dropwizard.logging.Log;
 
@@ -25,7 +26,7 @@ public class LoggingExceptionMapper<E extends Throwable> implements ExceptionMap
     @Context
     private HttpServletRequest request;
 
-    private final UnbrandedErrorHandler errorHandler = new UnbrandedErrorHandler();
+    private final JSONErrorHandler errorHandler = new JSONErrorHandler();
 
     @Override
     public Response toResponse(E exception) {
