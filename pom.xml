@@ -7,13 +7,13 @@
 
     <groupId>com.yammer.dropwizard</groupId>
     <artifactId>dropwizard-parent</artifactId>
-    <version>0.6.0-SNAPSHOT</version>
+    <version>0.6.0.7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Dropwizard Project</name>
     <url>http://dropwizard.codahale.com/</url>
     <description>
         Dropwizard is a Java framework for developing ops-friendly, high-performance, RESTful web
-        services.
+        services.  This is a fork for JSON error pages.
     </description>
 
     <modules>
@@ -35,6 +35,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <metrics.version>3.0.0-SNAPSHOT</metrics.version>
         <jersey.version>1.14</jersey.version>
+        <github.maven.repository>file:////Users/Lexi/Documents/maven-repo/repository/</github.maven.repository>
     </properties>
 
     <developers>
@@ -58,7 +59,7 @@
         <developerConnection>scm:git:git@github.com:codahale/dropwizard.git</developerConnection>
         <url>http://github.com/codahale/dropwizard/</url>
       <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <issueManagement>
         <system>github</system>
@@ -80,20 +81,10 @@
     </repositories>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Nexus Release Repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>maven-repository</id>
+            <url>${github.maven.repository}</url>
         </repository>
-        <site>
-            <id>repo.codahale.com</id>
-            <url>scp://codahale.com/home/codahale/dropwizard.codahale.com/maven/</url>
-        </site>
     </distributionManagement>
 
     <profiles>
@@ -106,22 +97,6 @@
                 </property>
             </activation>
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.4</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
             </build>
         </profile>
     </profiles>

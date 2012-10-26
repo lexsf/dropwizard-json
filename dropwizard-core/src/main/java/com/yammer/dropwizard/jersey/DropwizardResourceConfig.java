@@ -15,6 +15,8 @@ public class DropwizardResourceConfig extends ScanningResourceConfig {
             getSingletons().add(new InvalidEntityExceptionMapper());
             getSingletons().add(new JsonProcessingExceptionMapper());
         }
+
+
         getClasses().add(InstrumentedResourceMethodDispatchAdapter.class);
         getClasses().add(CacheControlledResourceMethodDispatchAdapter.class);
     }
