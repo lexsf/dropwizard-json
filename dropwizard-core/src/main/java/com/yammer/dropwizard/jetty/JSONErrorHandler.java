@@ -1,9 +1,10 @@
 package com.yammer.dropwizard.jetty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.google.common.collect.ImmutableList;
+import com.yammer.dropwizard.json.AnnotationSensitivePropertyNamingStrategy;
 import com.yammer.dropwizard.json.ObjectMapperFactory;
-import com.yammer.dropwizard.logging.Log;
 import com.yammer.dropwizard.validation.InvalidEntityException;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 
@@ -27,6 +28,8 @@ public class JSONErrorHandler extends ErrorHandler {
     @Override
     public void writeErrorPage(HttpServletRequest request, Writer writer, int code, String message, boolean showStacks) throws IOException {
         ObjectMapper mapper = new ObjectMapperFactory().build();
+        PropertyNamingStrategy strategy = new AnnotationSensitivePropertyNamingStrategy();
+        mapper.setPropertyNamingStrategy(strategy);
         Map<String, String> map = new HashMap<String, String>();
         map.put("errorCode", Integer.toString(code));
         map.put("errorMessage", message);
@@ -36,6 +39,8 @@ public class JSONErrorHandler extends ErrorHandler {
     @Override
     protected void writeErrorPageBody(HttpServletRequest request, Writer writer, int code, String message, boolean showStacks) throws IOException {
         ObjectMapper mapper = new ObjectMapperFactory().build();
+        PropertyNamingStrategy strategy = new AnnotationSensitivePropertyNamingStrategy();
+        mapper.setPropertyNamingStrategy(strategy);
         Map<String, String> map = new HashMap<String, String>();
         map.put("errorCode", Integer.toString(code));
         map.put("errorMessage", message);
@@ -44,6 +49,8 @@ public class JSONErrorHandler extends ErrorHandler {
 
     public void writeValidationErrorPage(HttpServletRequest request, StringWriter writer, InvalidEntityException exception) throws IOException {
         ObjectMapper mapper = new ObjectMapperFactory().build();
+        PropertyNamingStrategy strategy = new AnnotationSensitivePropertyNamingStrategy();
+        mapper.setPropertyNamingStrategy(strategy);
         Map<String, String> map = new HashMap<String, String>();
         map.put("errorMessage", exception.getMessage());
         map.put("errorCode", "422");

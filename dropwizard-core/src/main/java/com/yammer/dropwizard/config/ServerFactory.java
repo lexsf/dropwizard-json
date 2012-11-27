@@ -4,14 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.yammer.dropwizard.jetty.BiDiGzipHandler;
-<<<<<<< HEAD
-import com.yammer.dropwizard.jetty.JSONErrorHandler;
-=======
+import com.yammer.dropwizard.jetty.*;
 import com.yammer.dropwizard.jetty.InstrumentedSslSelectChannelConnector;
 import com.yammer.dropwizard.jetty.InstrumentedSslSocketConnector;
->>>>>>> upstream/master
-import com.yammer.dropwizard.jetty.UnbrandedErrorHandler;
 import com.yammer.dropwizard.servlets.ThreadNameFilter;
 import com.yammer.dropwizard.tasks.TaskServlet;
 import com.yammer.dropwizard.util.Duration;
@@ -19,7 +14,7 @@ import com.yammer.dropwizard.util.Size;
 import com.yammer.metrics.HealthChecks;
 import com.yammer.metrics.core.HealthCheck;
 import com.yammer.metrics.jetty.*;
-import com.yammer.metrics.reporting.AdminServlet;
+import com.yammer.metrics.servlet.AdminServlet;
 import com.yammer.metrics.util.DeadlockHealthCheck;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
