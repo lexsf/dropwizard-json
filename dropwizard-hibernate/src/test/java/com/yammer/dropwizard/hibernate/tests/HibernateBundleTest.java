@@ -10,7 +10,7 @@ import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import com.yammer.dropwizard.hibernate.SessionFactoryFactory;
 import com.yammer.dropwizard.hibernate.SessionFactoryHealthCheck;
-import com.yammer.dropwizard.hibernate.TransactionalResourceMethodDispatchAdapter;
+import com.yammer.dropwizard.hibernate.UnitOfWorkResourceMethodDispatchAdapter;
 import com.yammer.dropwizard.json.ObjectMapperFactory;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
@@ -22,12 +22,12 @@ import static org.mockito.Mockito.*;
 
 public class HibernateBundleTest {
     private final DatabaseConfiguration dbConfig = new DatabaseConfiguration();
-    private final ImmutableList<String> packages = ImmutableList.of("com.example.dao");
+    private final ImmutableList<Class<?>> entities = ImmutableList.<Class<?>>of(Person.class);
     private final SessionFactoryFactory factory = mock(SessionFactoryFactory.class);
     private final SessionFactory sessionFactory = mock(SessionFactory.class);
     private final Configuration configuration = mock(Configuration.class);
     private final Environment environment = mock(Environment.class);
-    private final HibernateBundle<Configuration> bundle = new HibernateBundle<Configuration>(packages, factory) {
+    private final HibernateBundle<Configuration> bundle = new HibernateBundle<Configuration>(entities, factory) {
         @Override
         public DatabaseConfiguration getDatabaseConfiguration(Configuration configuration) {
             return dbConfig;
@@ -61,15 +61,15 @@ public class HibernateBundleTest {
     public void buildsASessionFactory() throws Exception {
         bundle.run(configuration, environment);
 
-        verify(factory).build(environment, dbConfig, ImmutableList.of("com.example.dao"));
+        verify(factory).build(environment, dbConfig, entities);
     }
 
     @Test
     public void registersATransactionalAdapter() throws Exception {
         bundle.run(configuration, environment);
 
-        final ArgumentCaptor<TransactionalResourceMethodDispatchAdapter> captor =
-                ArgumentCaptor.forClass(TransactionalResourceMethodDispatchAdapter.class);
+        final ArgumentCaptor<UnitOfWorkResourceMethodDispatchAdapter> captor =
+                ArgumentCaptor.forClass(UnitOfWorkResourceMethodDispatchAdapter.class);
         verify(environment).addProvider(captor.capture());
 
         assertThat(captor.getValue().getSessionFactory()).isEqualTo(sessionFactory);

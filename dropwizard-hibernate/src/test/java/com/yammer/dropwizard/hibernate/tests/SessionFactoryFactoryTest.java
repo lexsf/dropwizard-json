@@ -1,7 +1,5 @@
 package com.yammer.dropwizard.hibernate.tests;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import com.google.common.collect.ImmutableList;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
@@ -9,24 +7,26 @@ import com.yammer.dropwizard.hibernate.ManagedSessionFactory;
 import com.yammer.dropwizard.hibernate.SessionFactoryFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class SessionFactoryFactoryTest {
     static {
-        ((Logger) LoggerFactory.getLogger("org")).setLevel(Level.OFF);
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
     }
 
     private final SessionFactoryFactory factory = new SessionFactoryFactory();
 
     private final Environment environment = mock(Environment.class);
     private final DatabaseConfiguration config = new DatabaseConfiguration();
-    private final ImmutableList<String> packages = ImmutableList.of("com.yammer.dropwizard.hibernate.tests");
 
     private SessionFactory sessionFactory;
 
@@ -59,10 +59,10 @@ public class SessionFactoryFactoryTest {
         final Session session = sessionFactory.openSession();
         try {
             session.createSQLQuery("DROP TABLE people IF EXISTS").executeUpdate();
-            session.createSQLQuery("CREATE TABLE people (name varchar(100) primary key, email varchar(100), age int)").executeUpdate();
-            session.createSQLQuery("INSERT INTO people VALUES ('Coda', 'coda@example.com', 300)").executeUpdate();
+            session.createSQLQuery("CREATE TABLE people (name varchar(100) primary key, email varchar(100), birthday timestamp)").executeUpdate();
+            session.createSQLQuery("INSERT INTO people VALUES ('Coda', 'coda@example.com', '1979-01-02 00:22:00')").executeUpdate();
 
-            final ExampleEntity entity = (ExampleEntity) session.get(ExampleEntity.class, "Coda");
+            final Person entity = (Person) session.get(Person.class, "Coda");
 
             assertThat(entity.getName())
                     .isEqualTo("Coda");
@@ -70,14 +70,16 @@ public class SessionFactoryFactoryTest {
             assertThat(entity.getEmail())
                     .isEqualTo("coda@example.com");
 
-            assertThat(entity.getAge())
-                    .isEqualTo(300);
+            assertThat(entity.getBirthday().toDateTime(DateTimeZone.UTC))
+                    .isEqualTo(new DateTime(1979, 1, 2, 0, 22, DateTimeZone.UTC));
         } finally {
             session.close();
         }
     }
 
     private void build() throws ClassNotFoundException {
-        this.sessionFactory = factory.build(environment, config, packages);
+        this.sessionFactory = factory.build(environment,
+                                            config,
+                                            ImmutableList.<Class<?>>of(Person.class));
     }
 }
