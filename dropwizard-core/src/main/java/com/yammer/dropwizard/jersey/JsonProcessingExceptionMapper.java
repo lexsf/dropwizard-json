@@ -63,7 +63,7 @@ public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProces
                                         stripLocation(message),
                                         false);
             return Response.status(Response.Status.BAD_REQUEST)
-                           .type(MediaType.TEXT_HTML_TYPE)
+                           .type(MediaType.APPLICATION_JSON)
                            .entity(writer.toString())
                            .build();
         } catch (IOException e) {
